@@ -11,6 +11,7 @@ import ChangeManagementCalendar from "./pages/ChangeManagementCalendar";
 import ChangeManagementForm from "./pages/ChangeManagementForm";
 import CMDB from "./pages/CMDB";
 import CMDBCategory from "./pages/CMDBCategory";
+import CMDBSubcategory from "./pages/CMDBSubcategory";
 import CMDBDetail from "./pages/CMDBDetail";
 import CMDBHistory from "./pages/CMDBHistory";
 import NotFound from "./pages/NotFound";
@@ -32,6 +33,7 @@ const App = () => (
             <Route path="/change-management/calendar" element={<ChangeManagementCalendar />} />
             <Route path="/cmdb" element={<CMDB />} />
             <Route path="/cmdb/:category" element={<CMDBCategory />} />
+            <Route path="/cmdb/:category/:subcategory" element={<CMDBSubcategory />} />
             <Route path="/cmdb/detail/:id" element={<CMDBDetail />} />
             <Route path="/cmdb/history/:id" element={<CMDBHistory />} />
           </Route>

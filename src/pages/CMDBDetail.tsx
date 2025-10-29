@@ -1,59 +1,10 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Line } from "react-chartjs-2";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-} from "chart.js";
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-);
 
 const CMDBDetail = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-
-  const activityData = {
-    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-    datasets: [
-      {
-        label: "Updates",
-        data: [2, 4, 3, 5, 4, 6],
-        borderColor: "#384E66",
-        backgroundColor: "rgba(56, 78, 102, 0.1)",
-        tension: 0.4,
-      },
-    ],
-  };
-
-  const chartOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        display: false,
-      },
-    },
-    scales: {
-      y: {
-        beginAtZero: true,
-      },
-    },
-  };
 
   return (
     <div>
@@ -66,7 +17,7 @@ const CMDBDetail = () => {
           <ArrowLeft size={24} />
         </button>
         <h1 className="text-5xl font-bold" style={{ color: "#253040" }}>
-          Asset Detail
+          Detail Aset
         </h1>
       </div>
 
@@ -80,7 +31,7 @@ const CMDBDetail = () => {
           }}
         >
           <CardHeader>
-            <CardTitle style={{ color: "#384E66" }}>Asset Overview</CardTitle>
+            <CardTitle style={{ color: "#384E66" }}>Ringkasan Aset</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
@@ -97,16 +48,16 @@ const CMDBDetail = () => {
                 <span className="text-gray-900">192.168.1.10</span>
               </div>
               <div className="flex justify-between items-center py-2 border-b border-gray-200">
-                <span className="font-semibold text-gray-700">Operating System:</span>
+                <span className="font-semibold text-gray-700">Sistem Operasi:</span>
                 <span className="text-gray-900">Ubuntu 22.04 LTS</span>
               </div>
               <div className="flex justify-between items-center py-2 border-b border-gray-200">
-                <span className="font-semibold text-gray-700">Owner:</span>
-                <span className="text-gray-900">John Doe</span>
+                <span className="font-semibold text-gray-700">Penanggung Jawab:</span>
+                <span className="text-gray-900">Budi Santoso</span>
               </div>
               <div className="flex justify-between items-center py-2">
                 <span className="font-semibold text-gray-700">Status:</span>
-                <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">
+                <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium border border-green-300">
                   Active
                 </span>
               </div>
@@ -122,7 +73,7 @@ const CMDBDetail = () => {
           }}
         >
           <CardHeader>
-            <CardTitle style={{ color: "#384E66" }}>Technical Specification</CardTitle>
+            <CardTitle style={{ color: "#384E66" }}>Spesifikasi Teknis</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
@@ -135,16 +86,16 @@ const CMDBDetail = () => {
                 <span className="text-gray-900">PowerEdge R740</span>
               </div>
               <div className="flex justify-between items-center py-2 border-b border-gray-200">
-                <span className="font-semibold text-gray-700">Version:</span>
+                <span className="font-semibold text-gray-700">Versi:</span>
                 <span className="text-gray-900">Gen 14</span>
               </div>
               <div className="flex justify-between items-center py-2 border-b border-gray-200">
-                <span className="font-semibold text-gray-700">Location:</span>
-                <span className="text-gray-900">Data Center A - Rack 12</span>
+                <span className="font-semibold text-gray-700">Lokasi:</span>
+                <span className="text-gray-900">Ruang Server - Rack 12</span>
               </div>
               <div className="flex justify-between items-center py-2 border-b border-gray-200">
-                <span className="font-semibold text-gray-700">Department:</span>
-                <span className="text-gray-900">IT Operations</span>
+                <span className="font-semibold text-gray-700">Departemen:</span>
+                <span className="text-gray-900">Divisi TI</span>
               </div>
               <div className="flex justify-between items-center py-2">
                 <span className="font-semibold text-gray-700">Serial Number:</span>
@@ -155,7 +106,7 @@ const CMDBDetail = () => {
         </Card>
       </div>
 
-      {/* Activity Timeline Chart */}
+      {/* Description Card */}
       <Card
         className="shadow-sm"
         style={{
@@ -164,11 +115,21 @@ const CMDBDetail = () => {
         }}
       >
         <CardHeader>
-          <CardTitle style={{ color: "#384E66" }}>Recent Activity Timeline</CardTitle>
+          <CardTitle style={{ color: "#384E66" }}>Deskripsi</CardTitle>
         </CardHeader>
         <CardContent>
-          <div style={{ height: "250px" }}>
-            <Line data={activityData} options={chartOptions} />
+          <p className="text-gray-700">
+            Server produksi untuk aplikasi internal perusahaan. Server ini menjalankan aplikasi kritis untuk operasional harian dan memiliki spesifikasi tinggi untuk menangani beban kerja yang besar.
+          </p>
+          <div className="mt-6 grid grid-cols-2 gap-4">
+            <div>
+              <span className="font-semibold text-gray-700">Dibuat:</span>
+              <span className="text-gray-900 ml-2">2024-01-15</span>
+            </div>
+            <div>
+              <span className="font-semibold text-gray-700">Update Terakhir:</span>
+              <span className="text-gray-900 ml-2">2024-03-10</span>
+            </div>
           </div>
         </CardContent>
       </Card>

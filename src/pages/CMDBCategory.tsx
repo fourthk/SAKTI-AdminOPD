@@ -1,121 +1,83 @@
-import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Filter, MoreVertical, Search } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { ArrowLeft, Monitor, Server, Printer, Network as NetworkIcon, Laptop, HardDrive, FileCode, Shield, Globe, Database as DatabaseIcon, Building2, File } from "lucide-react";
 
-const mockAssets = [
-  {
-    id: 1,
-    category: "Infrastructure",
-    parentId: "PAR001",
-    assetId: "AST001",
-    assetType: "Server",
-    hostname: "srv-prod-01",
-    ipAddress: "192.168.1.10",
-    osName: "Ubuntu",
-    osVersion: "22.04 LTS",
-    vendor: "Dell",
-    location: "Data Center A",
-    ownerDepartment: "IT Operations",
-    responsiblePerson: "John Doe",
-    status: "Active",
-    description: "Production server for web applications",
-    created: "2024-01-15",
-    lastUpdate: "2024-03-10",
-  },
-  {
-    id: 2,
-    category: "Infrastructure",
-    parentId: "PAR001",
-    assetId: "AST002",
-    assetType: "Network Device",
-    hostname: "sw-core-01",
-    ipAddress: "192.168.1.1",
-    osName: "Cisco IOS",
-    osVersion: "15.2",
-    vendor: "Cisco",
-    location: "Data Center A",
-    ownerDepartment: "Network Team",
-    responsiblePerson: "Jane Smith",
-    status: "Active",
-    description: "Core switch for network backbone",
-    created: "2024-01-20",
-    lastUpdate: "2024-03-08",
-  },
-];
+interface SubCategoryCardProps {
+  icon: React.ElementType;
+  count: number;
+  label: string;
+  iconColor: string;
+  onClick: () => void;
+}
+
+const SubCategoryCard = ({ icon: Icon, count, label, iconColor, onClick }: SubCategoryCardProps) => {
+  return (
+    <button
+      onClick={onClick}
+      className="rounded-lg p-6 flex items-center gap-4 shadow-sm transition-all hover:shadow-md hover:scale-105 w-full text-left"
+      style={{
+        backgroundColor: "#FDFDFD",
+        border: "1px solid #384E66",
+      }}
+    >
+      <div
+        className="p-3 rounded-lg"
+        style={{ backgroundColor: iconColor + "20" }}
+      >
+        <Icon size={28} style={{ color: iconColor }} />
+      </div>
+      <div>
+        <div className="text-3xl font-bold" style={{ color: "#384E66" }}>
+          {count}
+        </div>
+        <div className="text-sm text-gray-600">{label}</div>
+      </div>
+    </button>
+  );
+};
 
 const CMDBCategory = () => {
   const { category } = useParams();
   const navigate = useNavigate();
-  const [currentPage, setCurrentPage] = useState(1);
-  const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
-  const [selectedAsset, setSelectedAsset] = useState<typeof mockAssets[0] | null>(null);
-  const [newStatus, setNewStatus] = useState("");
 
-  const getStatusColor = (status: string) => {
-    switch (status.toLowerCase()) {
-      case "active":
-        return "bg-green-100 text-green-800 border-green-300";
-      case "inactive":
-        return "bg-gray-100 text-gray-800 border-gray-300";
-      case "maintenance":
-        return "bg-yellow-100 text-yellow-800 border-yellow-300";
-      default:
-        return "bg-blue-100 text-blue-800 border-blue-300";
-    }
+  // Define subcategories for each main category
+  const subcategoriesMap: Record<string, Array<{icon: React.ElementType, count: number, label: string, iconColor: string}>> = {
+    "Perangkat Keras (Hardware)": [
+      { icon: Monitor, count: 15, label: "Komputer dan Perangkat Personal", iconColor: "#3B82F6" },
+      { icon: Server, count: 8, label: "Server & Penyimpanan", iconColor: "#8B5CF6" },
+      { icon: Printer, count: 7, label: "Perangkat Cetak dan Input", iconColor: "#10B981" },
+      { icon: NetworkIcon, count: 12, label: "Perangkat Jaringan", iconColor: "#06B6D4" },
+      { icon: HardDrive, count: 5, label: "Perangkat Pendukung", iconColor: "#F59E0B" },
+    ],
+    "Perangkat Lunak (Software)": [
+      { icon: FileCode, count: 5, label: "Sistem Operasi", iconColor: "#3B82F6" },
+      { icon: FileCode, count: 7, label: "Aplikasi Perkantoran", iconColor: "#10B981" },
+    ],
+    "Jaringan & Infrastruktur TI": [
+      { icon: NetworkIcon, count: 8, label: "Kabel & Perangkat Fisik", iconColor: "#06B6D4" },
+      { icon: Shield, count: 6, label: "Keamanan Jaringan", iconColor: "#EF4444" },
+      { icon: Globe, count: 9, label: "Perangkat Komunikasi Data", iconColor: "#8B5CF6" },
+      { icon: Server, count: 5, label: "Perangkat Pendukung Infrastruktur", iconColor: "#F59E0B" },
+    ],
+    "Data & Informasi": [
+      { icon: DatabaseIcon, count: 6, label: "Database", iconColor: "#06B6D4" },
+      { icon: File, count: 9, label: "Dokumen Digital", iconColor: "#3B82F6" },
+    ],
+    "Bangunan & Fasilitas": [
+      { icon: Building2, count: 12, label: "Gedung & Ruangan", iconColor: "#F59E0B" },
+      { icon: Building2, count: 5, label: "Fasilitas Umum", iconColor: "#10B981" },
+      { icon: Building2, count: 5, label: "Area Luar", iconColor: "#8B5CF6" },
+    ],
+    "Peralatan & Kendaraan": [
+      { icon: Monitor, count: 8, label: "Furnitur Kantor", iconColor: "#64748B" },
+      { icon: Laptop, count: 5, label: "Alat Presentasi & Administrasi", iconColor: "#3B82F6" },
+      { icon: NetworkIcon, count: 5, label: "Kendaraan Dinas & Operasional", iconColor: "#EF4444" },
+    ],
   };
 
-  const getCategoryColor = (cat: string) => {
-    return "bg-blue-100 text-blue-800 border-blue-300";
-  };
+  const subcategories = subcategoriesMap[category || ""] || [];
 
-  const handleChangeStatus = (asset: typeof mockAssets[0]) => {
-    setSelectedAsset(asset);
-    setNewStatus(asset.status);
-    setIsStatusModalOpen(true);
-  };
-
-  const handleStatusSubmit = () => {
-    // Handle status update logic here
-    setIsStatusModalOpen(false);
-    setSelectedAsset(null);
+  const handleSubCategoryClick = (subLabel: string) => {
+    navigate(`/cmdb/${encodeURIComponent(category || "")}/${encodeURIComponent(subLabel)}`);
   };
 
   return (
@@ -124,7 +86,7 @@ const CMDBCategory = () => {
         <button
           onClick={() => navigate("/cmdb")}
           className="text-gray-600 hover:text-gray-900 transition-colors"
-          aria-label="Back to CMDB"
+          aria-label="Kembali ke CMDB"
         >
           <ArrowLeft size={24} />
         </button>
@@ -136,211 +98,18 @@ const CMDBCategory = () => {
         </h1>
       </div>
 
-      {/* Search and Filter Section */}
-      <div className="flex gap-3 mb-6">
-        <div className="flex-1 relative">
-          <Search
-            className="absolute left-3 top-1/2 transform -translate-y-1/2"
-            style={{ color: "#384E66" }}
-            size={20}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {subcategories.map((subcat) => (
+          <SubCategoryCard
+            key={subcat.label}
+            icon={subcat.icon}
+            count={subcat.count}
+            label={subcat.label}
+            iconColor={subcat.iconColor}
+            onClick={() => handleSubCategoryClick(subcat.label)}
           />
-          <Input
-            placeholder="Search assets..."
-            className="pl-10 bg-white font-medium"
-            style={{ 
-              borderRadius: "8px",
-              borderColor: "#384E66",
-              borderWidth: "2px"
-            }}
-          />
-        </div>
-        <Select defaultValue="All">
-          <SelectTrigger 
-            className="w-40" 
-            style={{ backgroundColor: "#384E66", color: "white", borderColor: "#384E66" }}
-          >
-            <SelectValue placeholder="Status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="All">All Status</SelectItem>
-            <SelectItem value="Active">Active</SelectItem>
-            <SelectItem value="Inactive">Inactive</SelectItem>
-            <SelectItem value="Maintenance">Maintenance</SelectItem>
-            <SelectItem value="Retired">Retired</SelectItem>
-          </SelectContent>
-        </Select>
+        ))}
       </div>
-
-      {/* Table */}
-      <div
-        className="rounded-lg overflow-hidden shadow-sm mb-6"
-        style={{
-          backgroundColor: "#FFFFFF",
-          border: "1px solid #E5E7EB",
-        }}
-      >
-        <Table>
-          <TableHeader>
-            <TableRow style={{ backgroundColor: "#384E66" }}>
-              <TableHead className="text-white font-semibold">ID</TableHead>
-              <TableHead className="text-white font-semibold">Category</TableHead>
-              <TableHead className="text-white font-semibold">Parent ID</TableHead>
-              <TableHead className="text-white font-semibold">Asset ID</TableHead>
-              <TableHead className="text-white font-semibold">Asset Type</TableHead>
-              <TableHead className="text-white font-semibold">Hostname</TableHead>
-              <TableHead className="text-white font-semibold">IP Address</TableHead>
-              <TableHead className="text-white font-semibold">OS Name</TableHead>
-              <TableHead className="text-white font-semibold">OS Version</TableHead>
-              <TableHead className="text-white font-semibold">Vendor</TableHead>
-              <TableHead className="text-white font-semibold">Location</TableHead>
-              <TableHead className="text-white font-semibold">Owner Department</TableHead>
-              <TableHead className="text-white font-semibold">Responsible Person</TableHead>
-              <TableHead className="text-white font-semibold">Status</TableHead>
-              <TableHead className="text-white font-semibold">Description</TableHead>
-              <TableHead className="text-white font-semibold">Created</TableHead>
-              <TableHead className="text-white font-semibold">Last Update</TableHead>
-              <TableHead className="text-white font-semibold">Action</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {mockAssets.map((asset) => (
-              <TableRow key={asset.id} className="hover:bg-gray-50">
-                <TableCell className="font-medium">{asset.id}</TableCell>
-                <TableCell>
-                  <Badge
-                    variant="outline"
-                    className={getCategoryColor(asset.category)}
-                  >
-                    {asset.category}
-                  </Badge>
-                </TableCell>
-                <TableCell>{asset.parentId}</TableCell>
-                <TableCell>{asset.assetId}</TableCell>
-                <TableCell>{asset.assetType}</TableCell>
-                <TableCell>{asset.hostname}</TableCell>
-                <TableCell>{asset.ipAddress}</TableCell>
-                <TableCell>{asset.osName}</TableCell>
-                <TableCell>{asset.osVersion}</TableCell>
-                <TableCell>{asset.vendor}</TableCell>
-                <TableCell>{asset.location}</TableCell>
-                <TableCell>{asset.ownerDepartment}</TableCell>
-                <TableCell>{asset.responsiblePerson}</TableCell>
-                <TableCell>
-                  <Badge
-                    variant="outline"
-                    className={getStatusColor(asset.status)}
-                  >
-                    {asset.status}
-                  </Badge>
-                </TableCell>
-                <TableCell className="max-w-xs truncate">{asset.description}</TableCell>
-                <TableCell>{asset.created}</TableCell>
-                <TableCell>{asset.lastUpdate}</TableCell>
-                <TableCell>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <button className="p-2 hover:bg-gray-100 rounded transition-colors">
-                        <MoreVertical size={18} />
-                      </button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="bg-white z-50">
-                      <DropdownMenuItem
-                        onClick={() => navigate(`/cmdb/detail/${asset.id}`)}
-                      >
-                        Detail
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() => navigate(`/cmdb/history/${asset.id}`)}
-                      >
-                        History
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => handleChangeStatus(asset)}>
-                        Change Status
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => console.log("Edit asset:", asset.id)}>
-                        Edit
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-
-      {/* Pagination */}
-      <Pagination>
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious
-              onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-              className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
-            />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink isActive={currentPage === 1} onClick={() => setCurrentPage(1)}>
-              1
-            </PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink isActive={currentPage === 2} onClick={() => setCurrentPage(2)}>
-              2
-            </PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink isActive={currentPage === 3} onClick={() => setCurrentPage(3)}>
-              3
-            </PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationNext
-              onClick={() => setCurrentPage(Math.min(3, currentPage + 1))}
-              className={currentPage === 3 ? "pointer-events-none opacity-50" : "cursor-pointer"}
-            />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
-
-      {/* Change Status Modal */}
-      <Dialog open={isStatusModalOpen} onOpenChange={setIsStatusModalOpen}>
-        <DialogContent className="sm:max-w-md bg-white">
-          <DialogHeader>
-            <DialogTitle className="text-2xl font-bold" style={{ color: "#253040" }}>
-              Change Status
-            </DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4 py-4">
-            <Select value={newStatus} onValueChange={setNewStatus}>
-              <SelectTrigger className="w-full border-2" style={{ borderColor: "#384E66", borderRadius: "12px" }}>
-                <SelectValue placeholder="Select status" />
-              </SelectTrigger>
-              <SelectContent className="bg-white z-50">
-                <SelectItem value="Active">Active</SelectItem>
-                <SelectItem value="Inactive">Inactive</SelectItem>
-                <SelectItem value="Maintenance">Maintenance</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="flex gap-3">
-            <Button
-              onClick={() => setIsStatusModalOpen(false)}
-              variant="outline"
-              className="flex-1"
-              style={{ borderColor: "#384E66", borderRadius: "8px", borderWidth: "2px" }}
-            >
-              cancel
-            </Button>
-            <Button
-              onClick={handleStatusSubmit}
-              className="flex-1"
-              style={{ backgroundColor: "#384E66", color: "white", borderRadius: "8px" }}
-            >
-              ok
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };
